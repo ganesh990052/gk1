@@ -37,4 +37,4 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction \
 
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+CMD ["sh", "-c", "php artisan config:clear && php artisan migrate --seed --force && apache2-foreground"]
