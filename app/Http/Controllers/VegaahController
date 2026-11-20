@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use App\Models\Order;
+
+class VegaahController extends Controller
+{
+
+    public function createPayment(Request $request)
+    {
+
+        $orderId = "ORD".time();
+
+        $amount = $request->amount;
+
+        $payload = [
+
+            "merchantId" => env('VEGAAH_MERCHANT_ID'),
+            "merchantKey" => env('VEGAAH_MERCHANT_KEY'),
+            "terminalId" => env('VEGAAH_TERMINAL_ID'),
+            "terminalPassword" => env('VEGAAH_TERMINAL_PASSWORD'),
+
+            "orderId" => $orderId,
+            "amount" => $amount,
+            "currency" => "INR",
+
+            "customerName" => $request->name,
+            "customerEmail" => $request->email,
+            "customerMobile" => $request->mobile,
+
+            "returnUrl" => url('/payment-success'),
+            "callbackUrl" => url('/api/vegaah/callback')
+
+        ];
+
+        $response = Http::post(env('VEGAAH_URL'), $payload);
+
+        Log::info("Vegaah Response", $response->json());
+
+        return response()->json($response->json());
+
+    }
+
+
+
+    public function paymentCallback(Request $request)
+    {
+
+        Log::info("Vegaah Callback", $request->all());
+
+        $orderId = $request->orderId;
+        $status  = $request->status;
+
+        if($status == "SUCCESS"){
+
+            Order::where('order_id',$orderId)->update([
+                "payment_status"=>"Paid"
+            ]);
+
+        }
+
+        return response()->json([
+            "message"=>"Payment Updated"
+        ]);
+
+    }
+
+}

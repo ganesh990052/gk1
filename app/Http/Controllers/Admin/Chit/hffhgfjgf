@@ -1,0 +1,885 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=7;"/>
+        <title>Govt. of KARNATAKA. Food and Civil Supplies & Consumer Affairs
+</title>
+        <link href="../App_Themes/Theme/masterPage.css" rel="stylesheet" type="text/css"/>
+        <link href="../style/master.css" rel="stylesheet" type="text/css"/>
+        <style type="text/css">
+            .style1 {
+                text-align: left;
+            }
+
+            .style2 {
+                text-align: center;
+            }
+
+            .style3 {
+                text-align: right;
+            }
+
+            .style4 {
+                font-weight: bold;
+            }
+        </style>
+        <style type="text/css">
+            #krotbl {
+            }
+
+            #krotbl th {
+                background-color: lightsalmon;
+                color: DarkSlateGray;
+                text-align: center;
+                font-size: 12px;
+                font-family: Verdana;
+            }
+
+            .comm_td {
+                width: 100px;
+                text-align: left;
+            }
+
+            .lbl_comm {
+                padding: 3px;
+                height: 30px;
+                text-align: right;
+                font-size: 12px;
+                font-family: Verdana;
+            }
+
+            .qty_td {
+                width: 100px;
+                text-align: right;
+            }
+
+            .lbl_qty {
+                padding: 3px;
+                height: 30px;
+                text-align: right;
+                font-size: 12px;
+                font-family: Verdana;
+            }
+
+            .rate_td {
+                width: 100px;
+                text-align: right;
+            }
+
+            .lbl_rate {
+                padding: 3px;
+                height: 30px;
+                text-align: right;
+                font-size: 12px;
+                font-family: Verdana;
+            }
+
+            .cost_td {
+                width: 100px;
+                text-align: right;
+            }
+
+            .lbl_cost {
+                padding: 3px;
+                height: 30px;
+                text-align: right;
+                font-size: 12px;
+                font-family: Verdana;
+            }
+
+            .req_td {
+                width: 100px;
+                text-align: right;
+            }
+
+            .txt_req_css {
+                padding: 3px;
+                height: 20px;
+                text-align: right;
+                font-size: 12px;
+                font-family: Verdana;
+            }
+
+            .effcost_td {
+                width: 100px;
+                text-align: right;
+            }
+
+            .lbl_effcost {
+                padding: 3px;
+                height: 30px;
+                text-align: right;
+                font-size: 12px;
+                font-family: Verdana;
+            }
+        </style>
+    </head>
+    <body class="masterpage">
+        <form name="aspnetForm" method="post" action="./Print_Kero_Cupon.aspx" onsubmit="javascript:return WebForm_OnSubmit();" id="aspnetForm">
+            <div>
+                <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value=""/>
+                <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value=""/>
+                <input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value=""/>
+                <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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"/>
+            </div>
+            <script type="text/javascript">
+                //<![CDATA[
+                var theForm = document.forms['aspnetForm'];
+                if (!theForm) {
+                    theForm = document.aspnetForm;
+                }
+                function __doPostBack(eventTarget, eventArgument) {
+                    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+                        theForm.__EVENTTARGET.value = eventTarget;
+                        theForm.__EVENTARGUMENT.value = eventArgument;
+                        theForm.submit();
+                    }
+                }
+                //]]>
+            </script>
+            <script src="/shopowner_kserver/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZOF-QKnUu5Q5xR6otF6XdsR0XkRbYuqhBg90iePdCufWNBmx8Q2&amp;t=638369269540000000" type="text/javascript"></script>
+            <script src="/shopowner_kserver/ScriptResource.axd?d=nv7asgRUU0tRmHNR2D6t1JpMtRLMNlZhkgntFUWR-btb1mSIEZJkq1ktmY2dNNaaUbqeUJTtsfm46N2QTgErnckU2r4fVORzuzffJRX_CgWrsm-f72BRd_8qBZBsghzMsQ0ulA2&amp;t=57c5e921" type="text/javascript"></script>
+            <script src="/shopowner_kserver/ScriptResource.axd?d=x6wALODbMJK5e0eRC_p1Le1gqTORfd8C81s7UYkHlXcdhPBHE-cSPjV4ZM4qfPe1sna_FcUkC3SVdLSP3UUV7M0wokmD7YJF82_6SZo1fGqk-yIk0&amp;t=397b6a7" type="text/javascript"></script>
+            <script src="/shopowner_kserver/ScriptResource.axd?d=P5lTttoqSeZXoYRLQMIScHeNFFzmB87eUDMXFPIwDowrqsbH2-tKt2tgCjqs4RZLNQ2iRjA-B1moJqV-fAWPgAVnE6TU-ZQ6VJGcPGUrSRmwMvW40&amp;t=397b6a7" type="text/javascript"></script>
+            <script type="text/javascript">
+                //<![CDATA[
+                function WebForm_OnSubmit() {
+                    if (typeof (ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false)
+                        return false;
+                    return true;
+                }
+                //]]>
+            </script>
+            <div>
+                <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="5B082DF2"/>
+                <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="IUsHbX1fCqWdzUIxA+vNpk521Qyp4SC8Gttr2g3YMNNh/iI6OeSAUgV5/2Y6JvJeeLPi7h1+KWyjrMcSXa3Ia7mNzs2SWRE7WFb7RiCzI743M3tHAixdbGjFBbnGW3rpwRWQKKZgjIocyxE0Nt/V6hFbiwUzDFYfKDZaXnQCsM7FXr8svKYJ3xxnjcnXkGnBho5BLusM1CuExsJZhAHjk4+Mso/fgu4mExZx9qpdYCEbWf18NqALGiDDhpbmyObTQJNW7vuosTH68t5YoteuspbgV+0lSyAHuVRqUErrC29txAvtFcDCnAyABzujPrvqTsr0ZWUIpDEtRoEtct5NJXMCO6gv+HqIMUEt7H+AjGmyVrt8CBtGyjtG5VKZnbU1GJM7cpdZb7L1s56CmJMiiBLZrExhsrMjyZXy1BcPsNnBw8GANWsM3B5OKkkYxKUOGuTTQ+E+dCscBtVhkxDLDmYi8ixhu/BSMciv+ytmvjPnPp/3iwrDUclGcJsIpZfgiRP4F0js5+XP8lQ3otlcTJrS1P2gKwJHMvMcPG4MadI2zsjcisP7UEX+GFu7xCcN6BqeLixK6Gw4KP5ZqxYHAdO/BznvjoXF+7pDbwiC65vfxJ6vusZEWKJrBRXHOngmjJlMlvjCwi76/y6RN7CliSR8M16FMs8KvSS/TK+5bLSp2NTjkNa5/OOaxa9ZZ/1XgM/uPx9lnvlZYBA3s011dv88WntKXQHdpAf3OIBKproDe5uNTfP4OSSURH2I3PgeiKXhGGEsj9XSOTm0EzgHOJoK0/nEagdvPgC4Zq88DVbLx5gqVj4f3pFqK640FJaUdaKpkACEKKBpSc7glrNJLhLt4D3+6yMB9ESiTv/6phmK0pk0ILZhfCumtcu1W63bzRU+S/6ot8pZg/EsPMrh+yCZzumpQAapiIDx9qNgOhZHYsPCyb1B0ROXssmru0q6mya1wOz11Qr9QWLZk2m7dso/3i3LGgO4H4fEejjZk67PRzBjPa+sqm8WCbFixBE5lNpdTVsqeN3XFyvBv6paBZMaM5397yu/mCSfVx1XF7IAd3cG8g9xgayj6bcMj3H5ifJllrYjuC1E/CkWEq1CFaXdCVc0s8ZSaJCReRMA6QQtdhofmxHgHpEo9Wb0VDDE05Jx6yNRCQT83e2nM+yalYWDprfs7rH/GSjy1fEK9hCdeYP2D0rb6ZGLbDCErJWQJZbQmyLWxyYJfV9+9FL2ZyH1yCuAigTPwqy3sDJib2N7P3ViPQ8VdS7oAKpLBM6JKw8NDjLQowTRtLh5Q/u+z4EbfKovIhJ9MhmWvIt3L5l5pgKG"/>
+            </div>
+            <div class="bgv">
+                <div id="masterHeader">
+                    <img id="ctl00_Image1" src="../Images/header.jpg" style="border-width:0px;"/>
+                </div>
+                <div id="mastercontent">
+                    <table id="navi_table">
+                        <tr>
+                            <td class="td1">
+                                <a id="ctl00_lnkMain" href="../main/MainMenu.aspx">
+                                    <img src="../Images/home.png" alt="" style="border-width:0px;"/>
+                                </a>
+                            </td>
+                            <td class="td2">
+                                <span id="ctl00_lblDistrict" class="style4">ಜಿಲ್ಲೆ : ಕಲಬುರಗಿ</span>
+                                &nbsp;&nbsp;&nbsp;<span id="ctl00_lbl_taluk" class="style4">ತಾಲೂಕು : ಶಹಬಾದ್</span>
+                            </td>
+                            <td class="td3">
+                                <a id="ctl00_lnk_Signout" href="javascript:__doPostBack(&#39;ctl00$lnk_Signout&#39;,&#39;&#39;)">
+                                    <img id="ctl00_homeimg" src="../Images/signout.png" style="border-width:0px;"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="master_titleinfo">
+                        <span id="ctl00_lblHeading" style="font-weight:bold;">Module Name</span>
+                    </div>
+                    <center>
+                        <script src="../Js/rightClick.js" type="text/javascript"></script>
+                        <script language="JavaScript">
+                            /**
+        * Disable right-click of mouse, F12 key, and save key combinations on page
+        * By Arthur Gareginyan (arthurgareginyan@gmail.com)
+        * For full source code, visit https://mycyberuniverse.com
+        */
+                            window.onload = function() {
+                                document.addEventListener("contextmenu", function(e) {
+                                    e.preventDefault();
+                                }, false);
+                                document.addEventListener("keydown", function(e) {
+                                    //document.onkeydown = function(e) {
+                                    // "I" key
+                                    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+                                        disabledEvent(e);
+                                    }
+                                    // "J" key
+                                    if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+                                        disabledEvent(e);
+                                    }
+
+                                    //// "C" key
+                                    //if (e.ctrlKey && e.shiftKey && e.keyCode == 67) {
+                                    //    disabledEvent(e);
+                                    //}
+
+                                    // "S" key + macOS
+                                    if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                                        disabledEvent(e);
+                                    }
+                                    // "U" key
+                                    if (e.ctrlKey && e.keyCode == 85) {
+                                        disabledEvent(e);
+                                    }
+                                    // "F12" key
+                                    if (event.keyCode == 123) {
+                                        disabledEvent(e);
+                                    }
+                                }, false);
+                                function disabledEvent(e) {
+                                    if (e.stopPropagation) {
+                                        e.stopPropagation();
+                                    } else if (window.event) {
+                                        window.event.cancelBubble = true;
+                                    }
+                                    e.preventDefault();
+                                    return false;
+                                }
+                            }
+                            ;
+                        </script>
+                        <link href="../style/master.css" rel="stylesheet" type="text/css"/>
+                        <style type="text/css">
+                            #krotbl {
+                            }
+
+                            #krotbl th {
+                                background-color: LightSalmon;
+                                color: DarkSlateGray;
+                                text-align: center;
+                                font-size: 12px;
+                                font-family: Verdana;
+                            }
+
+                            .comm_td {
+                                width: 100px;
+                                text-align: left;
+                            }
+
+                            .lbl_comm {
+                                padding: 3px;
+                                height: 30px;
+                                text-align: right;
+                                font-size: 12px;
+                                font-family: Verdana;
+                            }
+
+                            .qty_td {
+                                width: 100px;
+                                text-align: right;
+                            }
+
+                            .lbl_qty {
+                                padding: 3px;
+                                height: 30px;
+                                text-align: right;
+                                font-size: 12px;
+                                font-family: Verdana;
+                            }
+
+                            .rate_td {
+                                width: 100px;
+                                text-align: right;
+                            }
+
+                            .lbl_rate {
+                                padding: 3px;
+                                height: 30px;
+                                text-align: right;
+                                font-size: 12px;
+                                font-family: Verdana;
+                            }
+
+                            .cost_td {
+                                width: 100px;
+                                text-align: right;
+                            }
+
+                            .lbl_cost {
+                                padding: 3px;
+                                height: 30px;
+                                text-align: right;
+                                font-size: 12px;
+                                font-family: Verdana;
+                            }
+
+                            .req_td {
+                                width: 100px;
+                                text-align: right;
+                            }
+
+                            .txt_req_css {
+                                padding: 3px;
+                                height: 20px;
+                                text-align: right;
+                                font-size: 12px;
+                                font-family: Verdana;
+                            }
+
+                            .effcost_td {
+                                width: 100px;
+                                text-align: right;
+                            }
+
+                            .lbl_effcost {
+                                padding: 3px;
+                                height: 30px;
+                                text-align: right;
+                                font-size: 12px;
+                                font-family: Verdana;
+                            }
+
+                            .black_overlay_services {
+                                display: none;
+                                position: fixed;
+                                top: 0%;
+                                left: 0%;
+                                width: 100%;
+                                height: 100%;
+                                background-color: black;
+                                z-index: 1001;
+                                -moz-opacity: 0.8;
+                                opacity: .80;
+                                filter: alpha(opacity=80);
+                            }
+
+                            .white_content_services .closeCSS_services {
+                                position: absolute;
+                                right: 5px;
+                                top: 5px;
+                            }
+
+                            .white_content_services {
+                                display: none;
+                                position: absolute;
+                                top: 20%;
+                                left: 15%;
+                                width: 53%;
+                                height: 35%;
+                                padding: 70px;
+                                border: 1px solid #138fb8;
+                                background-color: white;
+                                z-index: 1002;
+                                overflow: auto;
+                                text-align: justify;
+                                box-shadow: 0 0 15px 1px #fffeb3;
+                                border-radius: 10px;
+                            }
+                        </style>
+                        <script type="text/javascript">
+                            function disableRightClick() {
+                                alert("Sorry, right click is not allowed !!");
+                                return false;
+                            }
+                        </script>
+                        <script type="text/javascript">
+                            function isNumber(evt) {
+                                var charcode = (evt.which) ? evt.which : event.keyCode;
+                                if (charcode > 31 && (charcode < 48 || charcode > 57))
+                                    return false;
+
+                                return true;
+                            }
+
+                            function validaterc() {
+                                var rc = document.getElementById("ctl00_ContentPlaceHolder1_txt_rc_no").value;
+
+                                if (rc == "") {
+                                    alert("Please enter valid Ration Card Number.");
+                                    return false;
+                                }
+
+                                return true;
+                            }
+                        </script>
+                        <script src="../Js/jqFancyTransitions.1.8.min.js" type="text/javascript"></script>
+                        <script type="text/javascript" src="../Js/json3.min.js"></script>
+                        <script src="../Js/jquery-3.7.1.min.js" type="text/javascript"></script>
+                        <script src="../Js/AlldevicesJS.js" type="text/javascript"></script>
+                        <script type="text/javascript">
+                            var hidBioInfoClientId = 'ctl00_ContentPlaceHolder1_hidBioInfo';
+                            var hidirisInfoClientId = 'ctl00_ContentPlaceHolder1_hidirisInfo';
+                            var hidirisDeviceInfoClientId = 'ctl00_ContentPlaceHolder1_hidirisDeviceInfo';
+                        </script>
+                        <input name="ctl00$ContentPlaceHolder1$hidirisDeviceInfo" type="hidden" id="ctl00_ContentPlaceHolder1_hidirisDeviceInfo"/>
+                        <script src="https://code.jquery.com/jquery-1.11.1.js" type="text/javascript"></script>
+                        <script type="text/javascript" language="javascript">
+
+                            function ShowProgress() {
+                                setTimeout(function() {
+                                    var modal = $('<div />');
+                                    modal.addClass("modalimage");
+                                    $('body').append(modal);
+                                    var loading = $(".loadingimage");
+                                    loading.show();
+                                    var top = Math.max($(window).height() / 2 - loading[0].offsetHeight / 2, 0);
+                                    var left = Math.max($(window).width() / 2 - loading[0].offsetWidth / 2, 0);
+                                    loading.css({
+                                        top: top,
+                                        left: left
+                                    });
+                                });
+                            }
+                            //$('form').live("btn_Login", function () {
+                            //    ShowProgress();
+                            //});
+
+                            $(window).load(function() {
+                                var loading = $(".loadingimage");
+                                loading.hide();
+                            });
+                        </script>
+                        <style type="text/css">
+                            .modalimage {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                background-color: black;
+                                z-index: 99;
+                                opacity: 0.8;
+                                filter: alpha(opacity=80);
+                                -moz-opacity: 0.8;
+                                min-height: 100%;
+                                width: 100%;
+                            }
+
+                            .loadingimage {
+                                font-family: Arial;
+                                font-size: 10pt;
+                                border: 5px solid #67CFF5;
+                                width: auto;
+                                height: auto;
+                                display: none;
+                                position: fixed;
+                                background-color: White;
+                                z-index: 999;
+                            }
+                        </style>
+                        <table id="ctl00_ContentPlaceHolder1_tbl_main" border="1" cellpadding="0" cellspacing="0" style="width: 927px;" bordercolor="#ffcc66" align="center">
+                            <tr>
+                                <td style="height: 19px; text-align: center;" colspan="7">
+                                    &nbsp;<span id="ctl00_ContentPlaceHolder1_Label13" style="font-size: large; color: #CC0066; font-weight: 700">Issue of Ration through Bio Auth/ಬಯೋ ದೃಢೀಕರಣ ಮೂಲಕ ಪಡಿತರ ವಿತರಣೆ</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="height: 19px; text-align: center;" colspan="7">
+                                    <script type="text/javascript">
+                                        //<![CDATA[
+                                        Sys.WebForms.PageRequestManager._initialize('ctl00$ContentPlaceHolder1$ScriptManager1', 'aspnetForm', [], [], [], 90, 'ctl00');
+                                        //]]>
+                                    </script>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="height: 24px; text-align: left;" colspan="7">
+                                    <table id="ctl00_ContentPlaceHolder1_rbl_card_type" border="0" style="color:Black;font-size:9pt;">
+                                        <tr>
+                                            <td>
+                                                <input id="ctl00_ContentPlaceHolder1_rbl_card_type_0" type="radio" name="ctl00$ContentPlaceHolder1$rbl_card_type" value="S" checked="checked"/>
+                                                <label for="ctl00_ContentPlaceHolder1_rbl_card_type_0">RC's belong to same district of the shop/ನಿಮ್ಮದೇ ಜಿಲ್ಲೆಯ ಪಡಿತರ ಚೀಟಿ</label>
+                                            </td>
+                                            <td>
+                                                <input id="ctl00_ContentPlaceHolder1_rbl_card_type_1" type="radio" name="ctl00$ContentPlaceHolder1$rbl_card_type" value="D" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ContentPlaceHolder1$rbl_card_type$1\&#39;,\&#39;\&#39;)&#39;, 0)"/>
+                                                <label for="ctl00_ContentPlaceHolder1_rbl_card_type_1">RC's belong to different district of the shop/ಇತರೆ ಜಿಲ್ಲೆಯ ಪಡಿತರ ಚೀಟಿ</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolder1_tr_rc">
+                                <td style="width: 323px; text-align: left; height: 24px;" colspan="4">
+                                    &nbsp;<span id="ctl00_ContentPlaceHolder1_Label5" style="font-size: small">Enter RC Number  / RC ನಂ *</span>
+                                </td>
+                                <td style="width: 274px; height: 24px; text-align: left;" colspan="2">
+                                    <input name="ctl00$ContentPlaceHolder1$txt_rc_no" type="text" value="150400170579" maxlength="15" id="ctl00_ContentPlaceHolder1_txt_rc_no" disabled="disabled" style="width:250px;"/>
+                                    <span id="ctl00_ContentPlaceHolder1_rfv_rc_no" style="color:Red;visibility:hidden;">*</span>
+                                    <span id="ctl00_ContentPlaceHolder1_rev_rc_no" style="color:Red;visibility:hidden;">*</span>
+                                </td>
+                                <td style="text-align: left; height: 24px;">
+                                    <input type="submit" name="ctl00$ContentPlaceHolder1$btn_rc" value="GO" onclick="return validaterc();" id="ctl00_ContentPlaceHolder1_btn_rc" style="color:DarkSlateGray;background-color:LightSalmon;font-family:Times New Roman;font-size:Medium;font-weight:bold;width:57px;font-size: small;"/>
+                                    <input type="submit" name="ctl00$ContentPlaceHolder1$btn_exit_rc" value="EXIT" id="ctl00_ContentPlaceHolder1_btn_exit_rc" style="color:DarkSlateGray;background-color:LightSalmon;font-family:Times New Roman;font-size:Medium;font-weight:bold;width:57px;font-size: small; height: 25px;"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; height: 24px;" colspan="7">
+                                    <center>
+                                        <span id="ctl00_ContentPlaceHolder1_lblEkycMbrStats" style="color:Red;font-size:10pt;font-weight:bold;">No. of Members: 2, No. of Members for whom eKYC done: 2, No. of Members for whom eKYC pending: 0</span>
+                                        <br/>
+                                        <span id="ctl00_ContentPlaceHolder1_lblCardType" style="color:Red;font-size:10pt;font-weight:bold;font-size: small">Card Type: APL(NPHH) - State Card</span>
+                                    </center>
+                                </td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolder1_tr_grid">
+                                <td style="width: 323px; text-align: left; height: 24px;" colspan="4">
+                                    &nbsp;<span id="ctl00_ContentPlaceHolder1_Label1" style="font-size: small">Member's Names  / ಸದಸ್ಯರು ಹೆಸರು</span>
+                                </td>
+                                <td style="width: 274px; height: 24px; text-align: left;" colspan="2">
+                                    <select name="ctl00$ContentPlaceHolder1$ddl_mems_detls" id="ctl00_ContentPlaceHolder1_ddl_mems_detls" style="width:250px;">
+                                        <option value="-2">--Select--</option>
+                                        <option value="0100081770XZDdOZkLa/mM35kzoSbDIhEU3rY7wtIZbQTt4XF79C6KBkhfMn1K7DTofwUBjv">Lakshmi P Jain</option>
+                                        <option selected="selected" value="01000817RH9A3gKsNbnAsy4SOi/ZXN+hA84q/JWIpbFuoQ33Cpa9UacxlNbWTh1OOaP9PgXI">Anaveerayya</option>
+                                    </select>
+                                </td>
+                                <td style="text-align: left; height: 24px;">
+                                    <input type="submit" name="ctl00$ContentPlaceHolder1$btn_mbrs" value="GO" id="ctl00_ContentPlaceHolder1_btn_mbrs" style="color:DarkSlateGray;background-color:LightSalmon;font-family:Times New Roman;font-size:Medium;font-weight:bold;width:57px;font-size: small;"/>
+                                </td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolder1_tr_type">
+                                <td style="width: 420px; text-align: left; height: 24px;" colspan="4">
+                                    &nbsp;<span id="ctl00_ContentPlaceHolder1_Label4" style="font-size: small">Select Type of Authentication:/ದೃಢೀಕರಣ ಪ್ರಕಾರ ಆಯ್ಕೆಮಾಡಿ</span>
+                                </td>
+                                <td style="width: 378px; height: 24px; text-align: left;" colspan="3">
+                                    <table id="ctl00_ContentPlaceHolder1_rbl_auth_type" border="0" style="color:Black;font-size:9pt;">
+                                        <tr>
+                                            <td>
+                                                <span disabled="disabled">
+                                                    <input id="ctl00_ContentPlaceHolder1_rbl_auth_type_0" type="radio" name="ctl00$ContentPlaceHolder1$rbl_auth_type" value="O" disabled="disabled" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ContentPlaceHolder1$rbl_auth_type$0\&#39;,\&#39;\&#39;)&#39;, 0)"/>
+                                                    <label for="ctl00_ContentPlaceHolder1_rbl_auth_type_0">Aadhaar Based OTP Authentication (UID)</label>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span disabled="disabled">
+                                                    <input id="ctl00_ContentPlaceHolder1_rbl_auth_type_1" type="radio" name="ctl00$ContentPlaceHolder1$rbl_auth_type" value="M" disabled="disabled" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ContentPlaceHolder1$rbl_auth_type$1\&#39;,\&#39;\&#39;)&#39;, 0)"/>
+                                                    <label for="ctl00_ContentPlaceHolder1_rbl_auth_type_1">Mobile Authentication</label>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <input id="ctl00_ContentPlaceHolder1_rbl_auth_type_2" type="radio" name="ctl00$ContentPlaceHolder1$rbl_auth_type" value="B" checked="checked"/>
+                                                <label for="ctl00_ContentPlaceHolder1_rbl_auth_type_2">Bio-Metric</label>
+                                            </td>
+                                            <td>
+                                                <input id="ctl00_ContentPlaceHolder1_rbl_auth_type_3" type="radio" name="ctl00$ContentPlaceHolder1$rbl_auth_type" value="I" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ContentPlaceHolder1$rbl_auth_type$3\&#39;,\&#39;\&#39;)&#39;, 0)"/>
+                                                <label for="ctl00_ContentPlaceHolder1_rbl_auth_type_3">Iris</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolder1_tr_MobileConsent">
+                                <td id="ctl00_ContentPlaceHolder1_tdCnstBioK" style="width: 420px; text-align: left; height: 24px;" colspan="4">
+                                    <span id="ctl00_ContentPlaceHolder1_lblMobileConsentBioK" style="font-size: small">ಆಧಾರ್ ಆಧಾರಿತ ದೃಢೀಕರಣ ವ್ಯವಸ್ಥೆಯೊಂದಿಗೆ ನನ್ನನ್ನು ದೃಢೀಕರಿಸಲು ನನಗೆ ಯಾವುದೇ ಅಭ್ಯಂತರವಿಲ್ಲ  ಮತ್ತು ಆಧಾರ್ ಆಧಾರಿತ ದೃಢೀಕರಣಕ್ಕಾಗಿ ನನ್ನ ಆಧಾರ್ ಸಂಖ್ಯೆ/VID/UID ಟೋಕನ್ ಮತ್ತು  ಬಯೋಮೆಟ್ರಿಕ್ ಡೇಟಾವನ್ನು ಒದಗಿಸಲು ಒಪ್ಪಿಗೆ ನೀಡುತ್ತೇನೆ. ದೃಢೀಕರಣಕ್ಕಾಗಿ ನಾನು ಒದಗಿಸುವ ಬಯೋಮೆಟ್ರಿಕ್ ಅನ್ನು ಆಧಾರ್ ದೃಢೀಕರಣ ವ್ಯವಸ್ಥೆಯ ಮೂಲಕ ನನ್ನ ಗುರುತನ್ನು ದೃಢೀಕರಿಸಲು ಮತ್ತು ಆಧಾರ್ ದೃಢೀಕರಣ ಸೇವೆಯ ಮೂಲಕ ನನ್ನ ಗುರುತನ್ನು ಪಡಿತರ ವಿತರಣೆಯ ಉದ್ದೇಶಕ್ಕಾಗಿ ಮಾತ್ರ ಬಳಸಲಾಗುವುದು ಎಂದು ನಾನು ಅರ್ಥಮಾಡಿಕೊಂಡಿದ್ದೇನೆ.</span>
+                                    <audio id="audio_play_bio_k">
+                                        <source src="../Images/consent_BIO_kan.mp3" type="audio/mpeg">
+                                    </audio>
+                                    <img src="../Images/contentplay.png" style="width: 50px; height: 25px; background-color: aliceblue;" onclick="document.getElementById('audio_play_bio_k').play(); return false;"/>
+                                </td>
+                                <td style="width: 420px; text-align: left; height: 24px;" colspan="4">
+                                    <table id="ctl00_ContentPlaceHolder1_RadioButtonList1" disabled="disabled" border="0" style="color:Black;font-size:9pt;">
+                                        <tr>
+                                            <td>
+                                                <span disabled="disabled">
+                                                    <input id="ctl00_ContentPlaceHolder1_RadioButtonList1_0" type="radio" name="ctl00$ContentPlaceHolder1$RadioButtonList1" value="Y" checked="checked" disabled="disabled"/>
+                                                    <label for="ctl00_ContentPlaceHolder1_RadioButtonList1_0">Yes</label>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span disabled="disabled">
+                                                    <input id="ctl00_ContentPlaceHolder1_RadioButtonList1_1" type="radio" name="ctl00$ContentPlaceHolder1$RadioButtonList1" value="N" disabled="disabled" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ContentPlaceHolder1$RadioButtonList1$1\&#39;,\&#39;\&#39;)&#39;, 0)"/>
+                                                    <label for="ctl00_ContentPlaceHolder1_RadioButtonList1_1">No</label>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolder1_tr_SMbio">
+                                <td style="width: 283px; height: 24px; text-align: left;" colspan="3">
+                                    <span id="ctl00_ContentPlaceHolder1_Label12" style="font-size: small">select bio verification type:/ಜೈವಿಕ ಪರಿಶೀಲನೆಯ ಪ್ರಕಾರ ಆಯ್ಕೆ:</span>
+                                </td>
+                                <td style="text-align: left; height: 24px; width: 378px;" colspan="4">
+                                    &nbsp;
+                                    <table id="ctl00_ContentPlaceHolder1_rbl_single_multiple" border="0" style="color:Black;font-size:9pt;height: 26px">
+                                        <tr>
+                                            <td>
+                                                <input id="ctl00_ContentPlaceHolder1_rbl_single_multiple_0" type="radio" name="ctl00$ContentPlaceHolder1$rbl_single_multiple" value="S" checked="checked"/>
+                                                <label for="ctl00_ContentPlaceHolder1_rbl_single_multiple_0">Single Bio verification</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolder1_trdevice">
+                                <td style="width: 283px; height: 24px; text-align: left;" colspan="3">
+                                    <span id="ctl00_ContentPlaceHolder1_Label19" style="font-size: small">Select type of Device:</span>
+                                </td>
+                                <td style="text-align: left; height: 24px; width: 378px;" colspan="4">
+                                    &nbsp;
+                                    <table id="ctl00_ContentPlaceHolder1_rdbldevice" border="0" style="color:Black;font-size:9pt;">
+                                        <tr>
+                                            <td>
+                                                <input id="ctl00_ContentPlaceHolder1_rdbldevice_0" type="radio" name="ctl00$ContentPlaceHolder1$rdbldevice" value="MANTRA" checked="checked"/>
+                                                <label for="ctl00_ContentPlaceHolder1_rdbldevice_0">BIO MANTRA</label>
+                                            </td>
+                                            <td>
+                                                <input id="ctl00_ContentPlaceHolder1_rdbldevice_1" type="radio" name="ctl00$ContentPlaceHolder1$rdbldevice" value="ACCESS" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ContentPlaceHolder1$rdbldevice$1\&#39;,\&#39;\&#39;)&#39;, 0)"/>
+                                                <label for="ctl00_ContentPlaceHolder1_rdbldevice_1">BIO ACCESS</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolder1_trbio1">
+                                <td colspan="3">
+                                    <span id="ctl00_ContentPlaceHolder1_Label16">BIO Metric/ಬಯೋ ಮೆಟ್ರಿಕ್</span>
+                                </td>
+                                <td colspan="4">
+                                    <img id="FPImage1" alt="Fingerpint Image" src="../Images/fingerprintimg.jpg" height="150px" width="150px"/>
+                                    &nbsp;<br/>
+                                    &nbsp;<input name="ctl00$ContentPlaceHolder1$btnmantra" type="button" id="ctl00_ContentPlaceHolder1_btnmantra" value="Bio Mantra" onclick="MantraBio(&#39;B&#39;)"/>
+                                </td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolder1_trbtnbio">
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="3">
+                                    <input type="submit" name="ctl00$ContentPlaceHolder1$btn_verify" value="verify" onclick=" this.disabled = true; __doPostBack(&#39;ctl00$ContentPlaceHolder1$btn_verify&#39;,&#39;&#39;);" id="ctl00_ContentPlaceHolder1_btn_verify" style="color:DarkSlateGray;background-color:LightSalmon;font-family:Times New Roman;font-size:Medium;font-weight:bold;width:57px;font-size: small;"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="pop" class="white_content11">
+                            <div class="closeCSS">
+                                <a href="javascript:void(0)" onclick="document.getElementById('pop').style.display='none';document.getElementById('fade').style.display='none'">
+                                    <span style="color: Purple">[X]</span>
+                                </a>
+                            </div>
+                            <div id="ctl00_ContentPlaceHolder1_UIDPhotoVerify">
+                                <center>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div id="ctl00_ContentPlaceHolder1_RC" style="margin: 0 auto; padding: 0; width: 350px; height: 225px; float: left">
+                                                    <table id="ctl00_ContentPlaceHolder1_tblRC" style="font-family: Verdana; font-size: 8pt; height: 226.93px; vertical-align: top; padding-top: 1px; width: 394px;" cellpadding="0" cellspacing="0" align="right">
+                                                        <tr>
+                                                            <td>
+                                                                <table width="100%" style="height: 100%;" cellpadding="0" cellspacing="0">
+                                                                    <tr>
+                                                                        <td style="width: 392.95px;" valign="top" align="center">
+                                                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    <span id="ctl00_ContentPlaceHolder1_lbl_rc_dtls" class="vfalse" style="font-family:Verdana;font-size:8pt;">RC DETAILS</span>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td align="left" style="width: 50%;">
+                                                                                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                                                                                        <tr>
+                                                                                                            <td align="right" style="width: 40%;">
+                                                                                                                <span id="ctl00_ContentPlaceHolder1_Label10" class="vfalse" style="font-family:Verdana;font-size:8pt;">ಜಿಲ್ಲೆ :</span>
+                                                                                                            </td>
+                                                                                                            <td align="left">
+                                                                                                                <span id="ctl00_ContentPlaceHolder1_lbl_RcDistrict" style="font-family:Verdana;font-size:8pt;font-weight:bold;padding-left: -20px;"></span>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </table>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <table width="100%" style="height: 25px;" cellpadding="0" cellspacing="0">
+                                                                                            <tr>
+                                                                                                <td align="left">
+                                                                                                    <table id="ctl00_ContentPlaceHolder1_Table2" cellpadding="0" cellspacing="0">
+                                                                                                        <tr>
+                                                                                                            <td align="right" style="width: 73%;">
+                                                                                                                <span id="ctl00_ContentPlaceHolder1_Label11" class="vfalse" style="font-family:Verdana;font-size:8pt;">ಪಡಿತರ ಚೀಟಿಯ ಸಂಖ್ಯೆ RCNo.: </span>
+                                                                                                            </td>
+                                                                                                            <td align="left">
+                                                                                                                <span id="ctl00_ContentPlaceHolder1_lblRCno" style="font-family:Verdana;font-size:8pt;font-weight:bold;padding-left: -20px;"></span>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </table>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td style="padding-top: 5px; padding-left: -10px;">
+                                                                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                                                                            <tr>
+                                                                                                <td align="left" style="width: 75px; height: 82px">
+                                                                                                    <div></div>
+                                                                                                </td>
+                                                                                                <td align="left">
+                                                                                                    <span id="ctl00_ContentPlaceHolder1_lblDispMess" style="font-family:Verdana;font-size:8pt;padding-left: -10px;"></span>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td align="left" colspan="2"></td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div id="ctl00_ContentPlaceHolder1_Button" align="center" style="margin: 0 auto; padding: 0;">
+                                                    <input type="submit" name="ctl00$ContentPlaceHolder1$btn_matched" value="Link Deleted Members" id="ctl00_ContentPlaceHolder1_btn_matched"/>
+                                                    <input type="submit" name="ctl00$ContentPlaceHolder1$btn_continue" value="Continue Generating Coupon" id="ctl00_ContentPlaceHolder1_btn_continue"/>
+                                                    <input type="submit" name="ctl00$ContentPlaceHolder1$btn_unmatched" value="Exit" id="ctl00_ContentPlaceHolder1_btn_unmatched"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </center>
+                            </div>
+                            <div></div>
+                        </div>
+                        <div id="pop_invalid_uid" class="white_content12">
+                            <div class="closeCSS">
+                                <a href="javascript:void(0)" onclick="document.getElementById('pop_invalid_uid').style.display='none';document.getElementById('fade').style.display='none'">
+                                    <span style="color: Purple">[X]</span>
+                                </a>
+                            </div>
+                            <div id="ctl00_ContentPlaceHolder1_invalid_uid" align="center">
+                                <table width="100%" cellpadding="0" cellspacing="0" border="1" style="font-family: Verdana; font-size: medium">
+                                    <tr>
+                                        <td>
+                                            <span id="ctl00_ContentPlaceHolder1_lbl_invalid_uid" style="color:Red;font-family:verdana;font-size:12pt;"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="ctl00_ContentPlaceHolder1_td_invaild_uid" align="left"></td>
+                                    </tr>
+                                    <tr id="ctl00_ContentPlaceHolder1_tr_invalid_uid_btn">
+                                        <td>
+                                            <input type="submit" name="ctl00$ContentPlaceHolder1$btn_invalid_uid_download" value="Yes" id="ctl00_ContentPlaceHolder1_btn_invalid_uid_download" style="width:75px;"/>
+                                            &nbsp;<input type="submit" name="ctl00$ContentPlaceHolder1$btn_no" value="NO" id="ctl00_ContentPlaceHolder1_btn_no" style="width:75px;"/>&nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div></div>
+                        </div>
+                        <div id="fade" class="black_overlay"></div>
+                        <div class="loadingimage" align="center">
+                            <img src="../Images/pleasewait.jpg" alt=" Loading. Please wait..."/>
+                            <br/>
+                        </div>
+                        <div class="white_content_services" id="Ration_details">
+                            <div class="closeCSS_services">
+                                <a href="javascript:void(0)" onclick="document.getElementById('Ration_details').style.display='none';document.getElementById('fade_services').style.display='none'">
+                                    <span style="color: Purple">[X]</span>
+                                </a>
+                            </div>
+                            Remaining Quantity Details / <span class="style2">&#3248;&#3271;&#3255;&#3240;&#3277;ಉಳಿದ ಪ್ರಮಾಣದ ವಿವರಗಳು
+        </span>
+                            <br/>
+                            <span id="ctl00_ContentPlaceHolder1_lbl_rem_quant_data" style="color:Green;font-family:verdana;font-size:X-Large;font-weight:bold;"></span>
+                            <br/>
+                            <br/>
+                            <center>
+                                <div></div>
+                                <center/>
+                                <br/>
+                                <a href="javascript:void(0)" onclick="document.getElementById('Ration_details').style.display='none';document.getElementById('fade_services').style.display='none'">
+                                    <span style="color: Purple">[X]</span>
+                                </a>
+                                <br/>
+                                <span id="ctl00_ContentPlaceHolder1_lbl_note" style="font-family:verdana;font-size:Medium;font-weight:bold;"></span>
+                                <br/>
+                        </div>
+                        <div id="fade_services" class="black_overlay_services"></div>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidirisInfo" type="hidden" id="ctl00_ContentPlaceHolder1_hidirisInfo"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo1" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo1"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo2" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo2"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo3" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo3"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo4" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo4"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo5" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo5"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidusername" type="hidden" id="ctl00_ContentPlaceHolder1_hidusername" value="9845551505"/>
+                        <input name="ctl00$ContentPlaceHolder1$hiddistcode" type="hidden" id="ctl00_ContentPlaceHolder1_hiddistcode" value="1515"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidtalcode" type="hidden" id="ctl00_ContentPlaceHolder1_hidtalcode" value="1515011"/>
+                        <input name="ctl00$ContentPlaceHolder1$hiddistname" type="hidden" id="ctl00_ContentPlaceHolder1_hiddistname" value="ಕಲಬುರಗಿ"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidtalname" type="hidden" id="ctl00_ContentPlaceHolder1_hidtalname" value="ಶಹಬಾದ್"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidshopid" type="hidden" id="ctl00_ContentPlaceHolder1_hidshopid" value="9487"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidshopno" type="hidden" id="ctl00_ContentPlaceHolder1_hidshopno" value="28"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidshoploc" type="hidden" id="ctl00_ContentPlaceHolder1_hidshoploc" value="Rural"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidshopname" type="hidden" id="ctl00_ContentPlaceHolder1_hidshopname" value="ಶ್ರೀಮತಿ ಲಕ್ಷ್ಮಿ ಪಿ.ಜೈನ ನ್ಯಾಯಬೆಲೆ ಅಂಗಡಿ ಹೋನಗುಂಟಾ"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidfoodcoup" type="hidden" id="ctl00_ContentPlaceHolder1_hidfoodcoup" value="N"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidcoupatshop" type="hidden" id="ctl00_ContentPlaceHolder1_hidcoupatshop" value="Y"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidcoupdistcode" type="hidden" id="ctl00_ContentPlaceHolder1_hidcoupdistcode" value="1515"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidcouptalcode" type="hidden" id="ctl00_ContentPlaceHolder1_hidcouptalcode" value="1515011"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidupdflg" type="hidden" id="ctl00_ContentPlaceHolder1_hidupdflg" value="I"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo6" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo6"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo7" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo7"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidBioInfo8" type="hidden" id="ctl00_ContentPlaceHolder1_hidBioInfo8"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidportno" type="hidden" id="ctl00_ContentPlaceHolder1_hidportno"/>
+                        <input name="ctl00$ContentPlaceHolder1$hidauthusername" type="hidden" id="ctl00_ContentPlaceHolder1_hidauthusername" value="Success!!9487!!28"/>
+                        <textarea name="getrdresponse" style="height: 10px; visibility: hidden;" rows="12" id="getrdresponse" visible="false"></textarea>
+                    </center>
+                </div>
+                <div id="masterfooter">
+                    <table border="0" cellpadding="0" cellspacing="0" style="width: 990px; margin: 3px auto">
+                        <tr>
+                            <td class="style1">Govt. of Karnataka. Food, Civil Supplies & Consumer Affairs
+                        </td>
+                            <td class="style2">
+                                <span id="ctl00_lblOffname"></span>
+                            </td>
+                            <td class="style3">
+                                Designed By : National Informatics Centre<br/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <script type="text/javascript">
+                //<![CDATA[
+                var Page_Validators = new Array(document.getElementById("ctl00_ContentPlaceHolder1_rfv_rc_no"),document.getElementById("ctl00_ContentPlaceHolder1_rev_rc_no"));
+                //]]>
+            </script>
+            <script type="text/javascript">
+                //<![CDATA[
+                var ctl00_ContentPlaceHolder1_rfv_rc_no = document.all ? document.all["ctl00_ContentPlaceHolder1_rfv_rc_no"] : document.getElementById("ctl00_ContentPlaceHolder1_rfv_rc_no");
+                ctl00_ContentPlaceHolder1_rfv_rc_no.controltovalidate = "ctl00_ContentPlaceHolder1_txt_rc_no";
+                ctl00_ContentPlaceHolder1_rfv_rc_no.errormessage = "Please Enter Ration Card Number!";
+                ctl00_ContentPlaceHolder1_rfv_rc_no.validationGroup = "Vgrp1";
+                ctl00_ContentPlaceHolder1_rfv_rc_no.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+                ctl00_ContentPlaceHolder1_rfv_rc_no.initialvalue = "";
+                var ctl00_ContentPlaceHolder1_rev_rc_no = document.all ? document.all["ctl00_ContentPlaceHolder1_rev_rc_no"] : document.getElementById("ctl00_ContentPlaceHolder1_rev_rc_no");
+                ctl00_ContentPlaceHolder1_rev_rc_no.controltovalidate = "ctl00_ContentPlaceHolder1_txt_rc_no";
+                ctl00_ContentPlaceHolder1_rev_rc_no.errormessage = "Incorrect Ration Card No";
+                ctl00_ContentPlaceHolder1_rev_rc_no.validationGroup = "Vgrp1";
+                ctl00_ContentPlaceHolder1_rev_rc_no.evaluationfunction = "RegularExpressionValidatorEvaluateIsValid";
+                ctl00_ContentPlaceHolder1_rev_rc_no.validationexpression = "^[0-9a-zA-Z ]+$";
+                //]]>
+            </script>
+            <script type="text/javascript">
+                //<![CDATA[
+
+                var Page_ValidationActive = false;
+                if (typeof (ValidatorOnLoad) == "function") {
+                    ValidatorOnLoad();
+                }
+
+                function ValidatorOnSubmit() {
+                    if (Page_ValidationActive) {
+                        return ValidatorCommonOnSubmit();
+                    } else {
+                        return true;
+                    }
+                }
+
+                document.getElementById('ctl00_ContentPlaceHolder1_rfv_rc_no').dispose = function() {
+                    Array.remove(Page_Validators, document.getElementById('ctl00_ContentPlaceHolder1_rfv_rc_no'));
+                }
+
+                document.getElementById('ctl00_ContentPlaceHolder1_rev_rc_no').dispose = function() {
+                    Array.remove(Page_Validators, document.getElementById('ctl00_ContentPlaceHolder1_rev_rc_no'));
+                }
+                //]]>
+            </script>
+        </form>
+    </body>
+</html>

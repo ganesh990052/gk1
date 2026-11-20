@@ -1,0 +1,7 @@
+=/home/u514635632/public_html/chit-fund
+stdout_logfile=/home/u514635632/public_html/chit-fund/storage/logs/scheduler.log
+stderr_logfile=/home/u514635632/public_html/chit-fund/storage/logs/scheduler-error.log
+autostart=true
+autorestart=true
+startsecs=10
+startretries=3
