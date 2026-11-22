@@ -28,7 +28,7 @@ use App\Models\Wallet;
 class AuthController extends Controller
 {
     /**
-     * Display a listing of the resource.
+- Display a listing of the resource.
      */
     public function index()
     {
@@ -36,7 +36,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+- Show the form for creating a new resource.
      */
      
     public function create(Request $request, OtpService $otpService)
@@ -80,6 +80,13 @@ class AuthController extends Controller
             // ✅ Generate OTP
             $otp = $this->generateOtp();
     
+            // ✅ Save OTP to database
+            Otp::create([
+                'otp' => $otp,
+                'user_id' => $user->id,
+                'expires_at' => now()->addMinutes(10),
+            ]);
+
             try {
                 // ✅ Send OTP via service
                 // $otpService->sendOtp($request->email, $request->phone, $otp);
@@ -88,20 +95,8 @@ class AuthController extends Controller
                 $user->notify(new ThankYouNotification($user));
     
             } catch (\Exception $e) {
-                $user->delete();
-                return response()->json([
-                    'status' => false,
-                    'error' => 'Failed to send email or OTP. Please try again later.',
-                    'details' => $e->getMessage()
-                ], 500);
+                Log::warning('Mail/OTP failed during register: ' . $e->getMessage());
             }
-    
-            // ✅ Save OTP to database
-            Otp::create([
-                'otp' => $otp,
-                'user_id' => $user->id,
-                'expires_at' => now()->addMinutes(10),
-            ]);
     
             return response()->json([
                 'status' => true,
@@ -119,7 +114,7 @@ class AuthController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+- Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
@@ -340,7 +335,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Social Login (Google / Apple)
+- Social Login (Google / Apple)
      */
     public function socialLogin(Request $request)
     {
@@ -410,7 +405,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Display the specified resource.
+- Display the specified resource.
      */
     public function show(string $id)
     {
@@ -418,7 +413,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+- Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
@@ -426,7 +421,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+- Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
@@ -434,7 +429,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+- Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
