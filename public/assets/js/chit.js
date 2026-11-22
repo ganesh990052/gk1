@@ -8,7 +8,7 @@ $('#openchitsModal').on('click', function() {
 $(document).ready(function(){
     // Function to add more input fields for presentage
     $('#addMore').click(function(){
-        var presentageValue = $('#presentageValue').val().trim(); // Trim leading and trailing spaces
+        var presentageValue = ($('#presentageValue').val() || '').trim(); // Trim leading and trailing spaces
         if (presentageValue === '') return; // Ignore if input is empty
 
         var updatedValue = $('#valueofprofit').val();
@@ -26,8 +26,8 @@ $(document).ready(function(){
 $('#chitForm').submit(function(e) {
     e.preventDefault();
 
-    var presentageValue = $('#valueofamount').val().trim(); 
-    var duration = parseInt($('#add_duration').val()); 
+    var presentageValue = ($('#valueofamount').val() || '').trim(); 
+    var duration = parseInt($('#add_duration').val(), 10) || 0; 
 
     var digitsCount = presentageValue.split(',').length;
 
@@ -199,5 +199,3 @@ $(document).ready(function () {
         $('.popup').hide(); // or $('.popup').fadeOut();
     });
 });
-
-
