@@ -223,7 +223,7 @@ class AuthController extends Controller
             Log::error('🔥 Unhandled Exception in login: ' . $e->getMessage());
             return response()->json([
                 'status' => false,
-                'message' => 'Server error. Please try again later.',
+                'message' => 'Server error: ' . $e->getMessage(),
                 'details' => $e->getMessage(),
             ], 500);
         }
