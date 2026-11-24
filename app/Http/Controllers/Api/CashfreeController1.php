@@ -85,7 +85,7 @@ class CashfreeController1 extends Controller
                 'order_id'      => 'required|string',
                 'amount'        => 'required|numeric',
                 'status'        => 'nullable|string',
-                'payment_mode'  => 'nullable|string',   // ✅ added
+                'payment_mode'  => 'nullable|string',
             ]);
     
             if ($validated->fails()) {
@@ -196,7 +196,6 @@ class CashfreeController1 extends Controller
 
         $orderData = $response->json();
 
-        // ✅ Decode order_note
         $rawNote = html_entity_decode($orderData['order_note'] ?? '{}', ENT_QUOTES);
         $note    = json_decode($rawNote, true);
 
@@ -226,9 +225,6 @@ class CashfreeController1 extends Controller
             ], 400);
         }
 
-        // =====================================================
-        // ✅ Payment Mode nikaalne ke liye Payments API call
-        // =====================================================
         $paymentMode = null;
 
         $paymentsUrl = "https://api.cashfree.com/pg/orders/{$orderId}/payments";
@@ -240,7 +236,6 @@ class CashfreeController1 extends Controller
 
         if ($paymentsRes->successful()) {
             $payments = $paymentsRes->json();
-            // Cashfree usually returns array of payments
             if (is_array($payments) && count($payments) > 0) {
                 $latestPayment = $payments[0];
                 $paymentMode = $latestPayment['payment_group'] 
@@ -252,9 +247,6 @@ class CashfreeController1 extends Controller
 
         \Log::info("💳 Payment Mode Detected", ['payment_mode' => $paymentMode, 'order_id' => $orderId]);
 
-        // =====================================================
-        // ✅ Update or Insert EMI record
-        // =====================================================
         $emi = Bid::where([
                 'user_id'         => $userId,
                 'applied_chit_id' => $applyId,
@@ -277,7 +269,7 @@ class CashfreeController1 extends Controller
             'status'                   => 'Done',
             'date'                     => now(),
             'paid_by'                  => 'customer',
-            'payment_mode'             => $paymentMode,   // ✅ save payment mode
+            'payment_mode'             => $paymentMode,
         ];
 
         if ($emi) {
@@ -326,7 +318,7 @@ class CashfreeController1 extends Controller
                 'bids.status as bid_status',
                 'bids.emi_status_of_this_month',
                 'bids.date as paid_date',
-                'bids.payment_mode',          // ✅ added
+                'bids.payment_mode',
                 'chitdetails.chit_value',
                 'chitdetails.subscription_amount',
                 'chitdetails.duration',
@@ -353,7 +345,7 @@ class CashfreeController1 extends Controller
     public function applyChit(Request $request)
     {
         try {
-            $validated = $request->validate([
+            $validator = Validator::make($request->all(), [
                 'user_id'      => 'required|integer',
                 'chit_id'      => 'required|integer',
                 'email'        => 'required|email',
@@ -361,6 +353,16 @@ class CashfreeController1 extends Controller
                 'applied_date' => 'required|date',
                 'force_apply'  => 'nullable|boolean',
             ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Validation failed',
+                    'errors'  => $validator->errors(),
+                ], 422);
+            }
+
+            $validated = $validator->validated();
 
             $appliedCount = DB::table('applied_chits')
                 ->where('user_id', $validated['user_id'])
@@ -397,62 +399,74 @@ class CashfreeController1 extends Controller
                 'applied_count'  => $appliedCount + 1,
             ], 200);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            Log::error('Error in CashfreeController1@applyChit: ' . $e->getMessage());
             return response()->json([
                 'status'  => false,
                 'message' => '❌ Something went wrong!',
                 'error'   => $e->getMessage(),
+                'line'    => $e->getLine(),
             ], 500);
         }
     }
     
     public function getUserAppliedChits(Request $request)
     {
-        $user_id = $request->input('user_id');
-        if (!$user_id) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'User ID is required',
-            ], 400);
-        }
+        try {
+            $user_id = $request->input('user_id');
+            if (!$user_id) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'User ID is required',
+                ], 400);
+            }
 
-        $data = DB::table('applied_chits')
-            ->join('chitdetails', 'applied_chits.chit_id', '=', 'chitdetails.id')
-            ->join('chit_groups', 'chitdetails.chit_id', '=', 'chit_groups.chit_id') 
-            ->select(
-                'applied_chits.id as applied_id',
-                'applied_chits.user_id',
-                'applied_chits.status',
-                'applied_chits.applied_date',
-                'applied_chits.email',
-                'applied_chits.phone',
-                'chitdetails.id as chit_detail_id',
-                'chitdetails.chit_id',
-                'chit_groups.id as chit_group_id',
-                'chitdetails.chit_value',
-                'chitdetails.duration',
-                'chitdetails.subscription_amount',
-                'chitdetails.first_auction_date',
-                'chitdetails.chit_type',
-                'chitdetails.emi_status'
-            )
-            ->where('applied_chits.user_id', $user_id)
-            ->where('applied_chits.status', 1)
-            ->orderBy('applied_chits.id', 'desc')
-            ->get();
+            $data = DB::table('applied_chits')
+                ->join('chitdetails', 'applied_chits.chit_id', '=', 'chitdetails.id')
+                ->join('chit_groups', 'chitdetails.chit_id', '=', 'chit_groups.chit_id') 
+                ->select(
+                    'applied_chits.id as applied_id',
+                    'applied_chits.user_id',
+                    'applied_chits.status',
+                    'applied_chits.applied_date',
+                    'applied_chits.email',
+                    'applied_chits.phone',
+                    'chitdetails.id as chit_detail_id',
+                    'chitdetails.chit_id',
+                    'chit_groups.id as chit_group_id',
+                    'chitdetails.chit_value',
+                    'chitdetails.duration',
+                    'chitdetails.subscription_amount',
+                    'chitdetails.first_auction_date',
+                    'chitdetails.chit_type',
+                    'chitdetails.emi_status'
+                )
+                ->where('applied_chits.user_id', $user_id)
+                ->where('applied_chits.status', 1)
+                ->orderBy('applied_chits.id', 'desc')
+                ->get();
 
-        if ($data->isEmpty()) {
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'No chits found for this user',
+                    'data'    => []
+                ]);
+            }
+
             return response()->json([
-                'status'  => false,
-                'message' => 'No chits found for this user',
-                'data'    => []
+                'status'  => true,
+                'message' => 'User applied chits fetched successfully',
+                'data'    => $data,
             ]);
+        } catch (\Throwable $e) {
+            Log::error('Error in CashfreeController1@getUserAppliedChits: ' . $e->getMessage());
+            return response()->json([
+                'status'  => false,
+                'message' => '❌ Something went wrong!',
+                'error'   => $e->getMessage(),
+                'line'    => $e->getLine(),
+            ], 500);
         }
-
-        return response()->json([
-            'status'  => true,
-            'message' => 'User applied chits fetched successfully',
-            'data'    => $data,
-        ]);
     }
 }
