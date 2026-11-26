@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ChitController extends Controller
 {
@@ -307,132 +308,148 @@ class ChitController extends Controller
 
     public function showEmiData(Request $request)
     {
-        Log::info('📥 Incoming EMI Data Request:', $request->all());
+        try {
+            Log::info('Incoming EMI Data Request:', $request->all());
 
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer',
-            'chit_group_id' => 'required|integer',
-            'chit_id' => 'required|integer',
-            'applied_chit_id' => 'required|integer',
-        ]);
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required|integer',
+                'chit_group_id' => 'required|integer',
+                'chit_id' => 'required|integer',
+                'applied_chit_id' => 'required|integer',
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
 
-        $group = Chitgroup::find($request->chit_group_id);
-        if (!$group) {
-            return response()->json([
-                'status' => false,
-                'error' => 'Chit group not found'
-            ], 404);
-        }
+            $group = Chitgroup::find($request->chit_group_id);
+            if (!$group) {
+                return response()->json([
+                    'status' => false,
+                    'error' => 'Chit group not found'
+                ], 404);
+            }
 
-        $chit = Chit::with('chitdetail', 'profit')->find($request->chit_id);
-        if (!$chit || $chit->chitdetail->isEmpty()) {
-            return response()->json([
-                'status' => false,
-                'error' => 'Chit details not found'
-            ], 404);
-        }
+            $chit = Chit::with('chitdetail', 'profit')->find($request->chit_id);
+            if (!$chit || $chit->chitdetail->isEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'error' => 'Chit details not found'
+                ], 404);
+            }
 
-        $bids = Bid::where('user_id', $request->user_id)
-            ->where('applied_chit_id', $request->applied_chit_id)
-            ->get();
+            $bids = Bid::where('user_id', $request->user_id)
+                ->where('applied_chit_id', $request->applied_chit_id)
+                ->get();
 
-        $paidBidsMap = [];
-        foreach ($bids as $bid) {
-            $monthKey = Carbon::parse($bid->date)->format('Y-m');
-            $paidBidsMap[$monthKey] = $bid;
-        }
+            $paidBidsMap = [];
+            foreach ($bids as $bid) {
+                if (!empty($bid->date)) {
+                    $monthKey = Carbon::parse($bid->date)->format('Y-m');
+                    $paidBidsMap[$monthKey] = $bid;
+                }
+            }
 
-        $paymentLogs = PaymentLog::where('user_id', $request->user_id)
-            ->where('applied_chit_id', $request->applied_chit_id)
-            ->orderBy('paid_at', 'asc')
-            ->get()
-            ->groupBy('emi_id');
+            $paymentLogsQuery = PaymentLog::where('user_id', $request->user_id);
+            if (Schema::hasColumn('payment_logs', 'applied_chit_id')) {
+                $paymentLogsQuery->where('applied_chit_id', $request->applied_chit_id);
+            }
+            $paymentLogs = $paymentLogsQuery->orderBy('paid_at', 'asc')
+                ->get()
+                ->groupBy('emi_id');
 
-        $firstAuctionDate = Carbon::parse($chit->chitdetail[0]->first_auction_date);
-        $monthlyAmount   = $chit->chitdetail[0]->subscription_amount;
-        $duration        = $chit->chitdetail[0]->duration;
-        $totalAmount     = $monthlyAmount * $duration;
+            $firstAuctionDate = Carbon::parse($chit->chitdetail[0]->first_auction_date);
+            $monthlyAmount   = (float) ($chit->chitdetail[0]->subscription_amount ?? 0);
+            $duration        = (int) ($chit->chitdetail[0]->duration ?? 0);
+            $totalAmount     = $monthlyAmount * $duration;
 
-        $data = [];
+            $data = [];
 
-        for ($i = 0; $i < $duration; $i++) {
-            $emiDate  = $firstAuctionDate->copy()->addMonths($i);
-            $monthKey = $emiDate->format('Y-m');
+            for ($i = 0; $i < $duration; $i++) {
+                $emiDate  = $firstAuctionDate->copy()->addMonths($i);
+                $monthKey = $emiDate->format('Y-m');
 
-            $matchedBid = $paidBidsMap[$monthKey] ?? null;
-            $isPaid   = !is_null($matchedBid);
+                $matchedBid = $paidBidsMap[$monthKey] ?? null;
+                $isPaid   = !is_null($matchedBid);
 
-            $paidDate = $matchedBid ? ($matchedBid->paid_date ?? ($matchedBid->created_at ? Carbon::parse($matchedBid->created_at)->format('d-m-Y') : null)) : null;
-            $penalty  = $matchedBid ? ($matchedBid->penalty ?? 0) : 0;
+                $paidDate = $matchedBid
+                    ? ($matchedBid->paid_date ?? ($matchedBid->created_at ? Carbon::parse($matchedBid->created_at)->format('d-m-Y') : null))
+                    : null;
+                $penalty  = $matchedBid ? ($matchedBid->penalty ?? 0) : 0;
 
-            $payments = [];
+                $payments = [];
 
-            if ($matchedBid && isset($paymentLogs[$matchedBid->id])) {
-                foreach ($paymentLogs[$matchedBid->id] as $log) {
+                if ($matchedBid && isset($paymentLogs[$matchedBid->id])) {
+                    foreach ($paymentLogs[$matchedBid->id] as $log) {
+                        $payments[] = [
+                            'paid_amount'  => (float) ($log->paid_amount ?? $log->amount ?? 0),
+                            'paid_at'      => $log->paid_at ? Carbon::parse($log->paid_at)->format('d-m-Y H:i') : null,
+                            'payment_mode' => $log->payment_mode ?? null,
+                            'penalty_paid' => (float) ($log->penalty_paid ?? 0),
+                        ];
+                    }
+                } elseif ($matchedBid) {
                     $payments[] = [
-                        'paid_amount'  => (float) $log->amount,
-                        'paid_at'      => $log->paid_at ? Carbon::parse($log->paid_at)->format('d-m-Y H:i') : null,
-                        'payment_mode' => $log->payment_mode ?? null,
-                        'penalty_paid' => 0,
+                        'paid_amount'  => (float) ($matchedBid->amount ?? $monthlyAmount),
+                        'paid_at'      => $paidDate,
+                        'payment_mode' => $matchedBid->payment_mode ?? null,
+                        'penalty_paid' => (float) $penalty,
                     ];
                 }
-            } elseif ($matchedBid) {
-                $payments[] = [
-                    'paid_amount'  => (float) ($matchedBid->amount ?? $monthlyAmount),
-                    'paid_at'      => $paidDate,
-                    'payment_mode' => $matchedBid->payment_mode ?? null,
-                    'penalty_paid' => (float) $penalty,
+
+                $monthlyWinner = DB::table('monthly_wise_winner')
+                    ->join('users', 'monthly_wise_winner.user_id', '=', 'users.id')
+                    ->where('monthly_wise_winner.chit_id', $request->chit_id)
+                    ->whereRaw("DATE_FORMAT(monthly_wise_winner.date, '%Y-%m') = ?", [$monthKey])
+                    ->select('users.id as user_id', 'users.name')
+                    ->first();
+
+                $winnerName = $monthlyWinner
+                    ? "{$monthlyWinner->name} (#{$monthlyWinner->user_id})"
+                    : 'Pending';
+
+                $profitItem   = $chit->profit[$i] ?? null;
+                $profitAmount = $profitItem
+                    ? round(($totalAmount * $profitItem->presentage) / 100, 0)
+                    : 0;
+
+                $luckyAmountRaw = $totalAmount - $profitAmount;
+                $luckyAmount    = round($luckyAmountRaw / 1000) * 1000;
+
+                $data[] = [
+                    'no' => $i + 1,
+                    'date' => $emiDate->format('d-m-Y'),
+                    'monthly_amount' => round($monthlyAmount, 2),
+                    'lucky_amount' => $luckyAmount,
+                    'emi_status_of_this_month' => $isPaid ? 'Done' : 'Pending',
+                    'lucky_member' => $winnerName,
+                    'lucky_member_id' => $monthlyWinner->user_id ?? null,
+                    'is_paid' => $isPaid,
+                    'paid_date' => $paidDate,
+                    'penalty' => $penalty,
+                    'payments' => $payments,
                 ];
             }
 
-            $monthlyWinner = DB::table('monthly_wise_winner')
-                ->join('users', 'monthly_wise_winner.user_id', '=', 'users.id')
-                ->where('monthly_wise_winner.chit_id', $request->chit_id)
-                ->whereRaw("DATE_FORMAT(monthly_wise_winner.date, '%Y-%m') = ?", [$monthKey])
-                ->select('users.id as user_id', 'users.name')
-                ->first();
-
-            $winnerName = $monthlyWinner
-                ? "{$monthlyWinner->name} (#{$monthlyWinner->user_id})"
-                : 'Pending';
-
-            $profitItem   = $chit->profit[$i] ?? null;
-            $profitAmount = $profitItem
-                ? round(($totalAmount * $profitItem->presentage) / 100, 0)
-                : 0;
-
-            $luckyAmountRaw = $totalAmount - $profitAmount;
-            $luckyAmount    = round($luckyAmountRaw / 1000) * 1000;
-
-            $data[] = [
-                'no' => $i + 1,
-                'date' => $emiDate->format('d-m-Y'),
-                'monthly_amount' => round($monthlyAmount, 2),
-                'lucky_amount' => $luckyAmount,
-                'emi_status_of_this_month' => $isPaid ? 'Done' : 'Pending',
-                'lucky_member' => $winnerName,
-                'lucky_member_id' => $monthlyWinner->user_id ?? null,
-                'is_paid' => $isPaid,
-                'paid_date' => $paidDate,
-                'penalty' => $penalty,
-                'payments' => $payments,
-            ];
+            return response()->json([
+                'status' => true,
+                'chit_id' => $chit->id,
+                'user_id' => $request->user_id,
+                'chit_group_id' => $request->chit_group_id,
+                'emi_data' => $data
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Error in ChitController@showEmiData: ' . $e->getMessage());
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => basename($e->getFile()),
+            ], 500);
         }
-
-        return response()->json([
-            'status' => true,
-            'chit_id' => $chit->id,
-            'user_id' => $request->user_id,
-            'chit_group_id' => $request->chit_group_id,
-            'emi_data' => $data
-        ]);
     }
 
     /**
