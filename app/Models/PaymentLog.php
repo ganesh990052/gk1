@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Factories\HasFactory;
-use Illuminate\Database\Model;
 
 class PaymentLog extends Model
 {
