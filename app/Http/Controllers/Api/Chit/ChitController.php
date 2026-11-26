@@ -361,6 +361,8 @@ class ChitController extends Controller
                 ->get()
                 ->groupBy('emi_id');
 
+            $hasMonthlyWiseWinnerTable = Schema::hasTable('monthly_wise_winner');
+
             $firstAuctionDate = Carbon::parse($chit->chitdetail[0]->first_auction_date);
             $monthlyAmount   = (float) ($chit->chitdetail[0]->subscription_amount ?? 0);
             $duration        = (int) ($chit->chitdetail[0]->duration ?? 0);
@@ -400,12 +402,15 @@ class ChitController extends Controller
                     ];
                 }
 
-                $monthlyWinner = DB::table('monthly_wise_winner')
-                    ->join('users', 'monthly_wise_winner.user_id', '=', 'users.id')
-                    ->where('monthly_wise_winner.chit_id', $request->chit_id)
-                    ->whereRaw("DATE_FORMAT(monthly_wise_winner.date, '%Y-%m') = ?", [$monthKey])
-                    ->select('users.id as user_id', 'users.name')
-                    ->first();
+                $monthlyWinner = null;
+                if ($hasMonthlyWiseWinnerTable) {
+                    $monthlyWinner = DB::table('monthly_wise_winner')
+                        ->join('users', 'monthly_wise_winner.user_id', '=', 'users.id')
+                        ->where('monthly_wise_winner.chit_id', $request->chit_id)
+                        ->whereRaw("DATE_FORMAT(monthly_wise_winner.date, '%Y-%m') = ?", [$monthKey])
+                        ->select('users.id as user_id', 'users.name')
+                        ->first();
+                }
 
                 $winnerName = $monthlyWinner
                     ? "{$monthlyWinner->name} (#{$monthlyWinner->user_id})"
