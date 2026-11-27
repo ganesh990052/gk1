@@ -28,9 +28,9 @@ class CashfreeController1 extends Controller
             'apply_id'       => 'required|integer',
         ]);
     
-        $appId     = "1066662783142e7bd032d0926c32666601";
+        $appId     = env("CASHFREE_APP_ID");
         $secretKey = env("CASHFREE_SECRET_KEY");
-        $url       = "https://api.cashfree.com/pg/orders";
+        $url       = "https://sandbox.cashfree.com/pg/orders";
         $orderId   = "order_" . uniqid();
     
         $body = [
@@ -49,7 +49,7 @@ class CashfreeController1 extends Controller
                 "apply_id"      => $request->apply_id,
             ]),
             "order_meta" => [
-                "return_url" => "https://admin.investifya.com/payment/callback?order_id=$orderId"
+                "return_url" => "https://gk1-9zox.onrender.com/api/payment/success?order_id=$orderId"
             ],
         ];
     
@@ -175,9 +175,9 @@ class CashfreeController1 extends Controller
             ], 400);
         }
 
-        $appId     = "1066662783142e7bd032d0926c32666601";
+        $appId     = env("CASHFREE_APP_ID");
         $secretKey = env("CASHFREE_SECRET_KEY");
-        $url       = "https://api.cashfree.com/pg/orders/$orderId";
+        $url       = "https://sandbox.cashfree.com/pg/orders/$orderId";
 
         $response = Http::withHeaders([
             "x-client-id"     => $appId,
@@ -227,7 +227,7 @@ class CashfreeController1 extends Controller
 
         $paymentMode = null;
 
-        $paymentsUrl = "https://api.cashfree.com/pg/orders/{$orderId}/payments";
+        $paymentsUrl = "https://sandbox.cashfree.com/pg/orders/{$orderId}/payments";
         $paymentsRes = Http::withHeaders([
             "x-client-id"     => $appId,
             "x-client-secret" => $secretKey,
