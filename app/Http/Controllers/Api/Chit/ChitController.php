@@ -341,15 +341,28 @@ class ChitController extends Controller
                 ], 404);
             }
 
+            // Fetch all bids for this user + applied_chit_id
             $bids = Bid::where('user_id', $request->user_id)
                 ->where('applied_chit_id', $request->applied_chit_id)
                 ->get();
 
-            $paidBidsMap = [];
+            $paidBidsMap = [];          // key = Y-m
+            $latestDoneBid = null;      // fallback for current month payment
+
             foreach ($bids as $bid) {
+                $isDone = ($bid->emi_status_of_this_month === 'Done' || $bid->status === 'Done');
+
                 if (!empty($bid->date)) {
                     $monthKey = Carbon::parse($bid->date)->format('Y-m');
                     $paidBidsMap[$monthKey] = $bid;
+                }
+
+                // Keep the most recent Done bid as fallback
+                if ($isDone) {
+                    if ($latestDoneBid === null || 
+                        Carbon::parse($bid->date)->gt(Carbon::parse($latestDoneBid->date ?? '1970-01-01'))) {
+                        $latestDoneBid = $bid;
+                    }
                 }
             }
 
@@ -369,13 +382,26 @@ class ChitController extends Controller
             $totalAmount     = $monthlyAmount * $duration;
 
             $data = [];
+            $currentMonthKey = Carbon::now()->format('Y-m');
 
             for ($i = 0; $i < $duration; $i++) {
                 $emiDate  = $firstAuctionDate->copy()->addMonths($i);
                 $monthKey = $emiDate->format('Y-m');
 
+                // 1. Prefer exact month match
                 $matchedBid = $paidBidsMap[$monthKey] ?? null;
-                $isPaid   = !is_null($matchedBid);
+
+                // 2. Fallback: if this is the current month and we have a recent Done bid
+                if ($matchedBid === null && $monthKey === $currentMonthKey && $latestDoneBid !== null) {
+                    $matchedBid = $latestDoneBid;
+                }
+
+                $isPaid = false;
+                if ($matchedBid) {
+                    $isPaid = ($matchedBid->emi_status_of_this_month === 'Done' 
+                            || $matchedBid->status === 'Done'
+                            || !empty($matchedBid->amount));
+                }
 
                 $paidDate = $matchedBid
                     ? ($matchedBid->paid_date ?? ($matchedBid->created_at ? Carbon::parse($matchedBid->created_at)->format('d-m-Y') : null))
