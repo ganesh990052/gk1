@@ -28,9 +28,9 @@ class CashfreeController1 extends Controller
             'apply_id'       => 'required|integer',
         ]);
     
-        $appId     = env("CASHFREE_APP_ID");
+        $appId     = "1066662783142e7bd032d0926c32666601";
         $secretKey = env("CASHFREE_SECRET_KEY");
-        $url       = "https://sandbox.cashfree.com/pg/orders";
+        $url       = "https://api.cashfree.com/pg/orders";
         $orderId   = "order_" . uniqid();
     
         $body = [
@@ -49,7 +49,7 @@ class CashfreeController1 extends Controller
                 "apply_id"      => $request->apply_id,
             ]),
             "order_meta" => [
-                "return_url" => "https://gk1-9zox.onrender.com/api/payment/success?order_id=$orderId"
+                "return_url" => "https://admin.investifya.com/payment/callback?order_id=$orderId"
             ],
         ];
     
@@ -131,9 +131,31 @@ class CashfreeController1 extends Controller
             if ($emi) {
                 $emi->update($data);
             } else {
+                // Resolve chit_group_id and chit_id from applied_chits
+                // to avoid MySQL error 1364 (Field 'chit_group_id' doesn't have a default value)
+                $applied = DB::table('applied_chits as ac')
+                    ->join('chitdetails as cd', 'ac.chit_id', '=', 'cd.id')
+                    ->leftJoin('chit_groups as cg', 'cd.chit_id', '=', 'cg.chit_id')
+                    ->where('ac.id', $applyId)
+                    ->select(
+                        'cd.id as chit_detail_id',
+                        'cd.chit_id as chit_id',
+                        'cg.id as chit_group_id'
+                    )
+                    ->first();
+
+                if (!$applied) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => '❌ Applied chit not found for given apply_id'
+                    ], 404);
+                }
+
                 Bid::create(array_merge($data, [
                     'user_id'         => $userId,
                     'applied_chit_id' => $applyId,
+                    'chit_id'         => $applied->chit_detail_id ?? $applied->chit_id,
+                    'chit_group_id'   => $applied->chit_group_id,
                 ]));
             }
     
@@ -175,9 +197,9 @@ class CashfreeController1 extends Controller
             ], 400);
         }
 
-        $appId     = env("CASHFREE_APP_ID");
+        $appId     = "1066662783142e7bd032d0926c32666601";
         $secretKey = env("CASHFREE_SECRET_KEY");
-        $url       = "https://sandbox.cashfree.com/pg/orders/$orderId";
+        $url       = "https://api.cashfree.com/pg/orders/$orderId";
 
         $response = Http::withHeaders([
             "x-client-id"     => $appId,
@@ -196,6 +218,7 @@ class CashfreeController1 extends Controller
 
         $orderData = $response->json();
 
+        // ✅ Decode order_note
         $rawNote = html_entity_decode($orderData['order_note'] ?? '{}', ENT_QUOTES);
         $note    = json_decode($rawNote, true);
 
@@ -225,9 +248,12 @@ class CashfreeController1 extends Controller
             ], 400);
         }
 
+        // =====================================================
+        // ✅ Payment Mode nikaalne ke liye Payments API call
+        // =====================================================
         $paymentMode = null;
 
-        $paymentsUrl = "https://sandbox.cashfree.com/pg/orders/{$orderId}/payments";
+        $paymentsUrl = "https://api.cashfree.com/pg/orders/{$orderId}/payments";
         $paymentsRes = Http::withHeaders([
             "x-client-id"     => $appId,
             "x-client-secret" => $secretKey,
@@ -236,6 +262,7 @@ class CashfreeController1 extends Controller
 
         if ($paymentsRes->successful()) {
             $payments = $paymentsRes->json();
+            // Cashfree usually returns array of payments
             if (is_array($payments) && count($payments) > 0) {
                 $latestPayment = $payments[0];
                 $paymentMode = $latestPayment['payment_group'] 
@@ -247,6 +274,9 @@ class CashfreeController1 extends Controller
 
         \Log::info("💳 Payment Mode Detected", ['payment_mode' => $paymentMode, 'order_id' => $orderId]);
 
+        // =====================================================
+        // ✅ Update or Insert EMI record
+        // =====================================================
         $emi = Bid::where([
                 'user_id'         => $userId,
                 'applied_chit_id' => $applyId,
@@ -345,7 +375,7 @@ class CashfreeController1 extends Controller
     public function applyChit(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
+            $validated = $request->validate([
                 'user_id'      => 'required|integer',
                 'chit_id'      => 'required|integer',
                 'email'        => 'required|email',
@@ -353,16 +383,6 @@ class CashfreeController1 extends Controller
                 'applied_date' => 'required|date',
                 'force_apply'  => 'nullable|boolean',
             ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'  => false,
-                    'message' => 'Validation failed',
-                    'errors'  => $validator->errors(),
-                ], 422);
-            }
-
-            $validated = $validator->validated();
 
             $appliedCount = DB::table('applied_chits')
                 ->where('user_id', $validated['user_id'])
@@ -399,74 +419,62 @@ class CashfreeController1 extends Controller
                 'applied_count'  => $appliedCount + 1,
             ], 200);
 
-        } catch (\Throwable $e) {
-            Log::error('Error in CashfreeController1@applyChit: ' . $e->getMessage());
+        } catch (\Exception $e) {
             return response()->json([
                 'status'  => false,
                 'message' => '❌ Something went wrong!',
                 'error'   => $e->getMessage(),
-                'line'    => $e->getLine(),
             ], 500);
         }
     }
     
     public function getUserAppliedChits(Request $request)
     {
-        try {
-            $user_id = $request->input('user_id');
-            if (!$user_id) {
-                return response()->json([
-                    'status'  => false,
-                    'message' => 'User ID is required',
-                ], 400);
-            }
-
-            $data = DB::table('applied_chits')
-                ->join('chitdetails', 'applied_chits.chit_id', '=', 'chitdetails.id')
-                ->join('chit_groups', 'chitdetails.chit_id', '=', 'chit_groups.chit_id') 
-                ->select(
-                    'applied_chits.id as applied_id',
-                    'applied_chits.user_id',
-                    'applied_chits.status',
-                    'applied_chits.applied_date',
-                    'applied_chits.email',
-                    'applied_chits.phone',
-                    'chitdetails.id as chit_detail_id',
-                    'chitdetails.chit_id',
-                    'chit_groups.id as chit_group_id',
-                    'chitdetails.chit_value',
-                    'chitdetails.duration',
-                    'chitdetails.subscription_amount',
-                    'chitdetails.first_auction_date',
-                    'chitdetails.chit_type',
-                    'chitdetails.emi_status'
-                )
-                ->where('applied_chits.user_id', $user_id)
-                ->where('applied_chits.status', 1)
-                ->orderBy('applied_chits.id', 'desc')
-                ->get();
-
-            if ($data->isEmpty()) {
-                return response()->json([
-                    'status'  => false,
-                    'message' => 'No chits found for this user',
-                    'data'    => []
-                ]);
-            }
-
-            return response()->json([
-                'status'  => true,
-                'message' => 'User applied chits fetched successfully',
-                'data'    => $data,
-            ]);
-        } catch (\Throwable $e) {
-            Log::error('Error in CashfreeController1@getUserAppliedChits: ' . $e->getMessage());
+        $user_id = $request->input('user_id');
+        if (!$user_id) {
             return response()->json([
                 'status'  => false,
-                'message' => '❌ Something went wrong!',
-                'error'   => $e->getMessage(),
-                'line'    => $e->getLine(),
-            ], 500);
+                'message' => 'User ID is required',
+            ], 400);
         }
+
+        $data = DB::table('applied_chits')
+            ->join('chitdetails', 'applied_chits.chit_id', '=', 'chitdetails.id')
+            ->join('chit_groups', 'chitdetails.chit_id', '=', 'chit_groups.chit_id') 
+            ->select(
+                'applied_chits.id as applied_id',
+                'applied_chits.user_id',
+                'applied_chits.status',
+                'applied_chits.applied_date',
+                'applied_chits.email',
+                'applied_chits.phone',
+                'chitdetails.id as chit_detail_id',
+                'chitdetails.chit_id',
+                'chit_groups.id as chit_group_id',
+                'chitdetails.chit_value',
+                'chitdetails.duration',
+                'chitdetails.subscription_amount',
+                'chitdetails.first_auction_date',
+                'chitdetails.chit_type',
+                'chitdetails.emi_status'
+            )
+            ->where('applied_chits.user_id', $user_id)
+            ->where('applied_chits.status', 1)
+            ->orderBy('applied_chits.id', 'desc')
+            ->get();
+
+        if ($data->isEmpty()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'No chits found for this user',
+                'data'    => []
+            ]);
+        }
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'User applied chits fetched successfully',
+            'data'    => $data,
+        ]);
     }
 }
