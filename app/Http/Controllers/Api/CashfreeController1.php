@@ -28,9 +28,9 @@ class CashfreeController1 extends Controller
             'apply_id'       => 'required|integer',
         ]);
     
-        $appId     = "1066662783142e7bd032d0926c32666601";
+        $appId     = env("CASHFREE_APP_ID");
         $secretKey = env("CASHFREE_SECRET_KEY");
-        $url       = "https://api.cashfree.com/pg/orders";
+        $url       = "https://sandbox.cashfree.com/pg/orders";
         $orderId   = "order_" . uniqid();
     
         $body = [
@@ -49,7 +49,7 @@ class CashfreeController1 extends Controller
                 "apply_id"      => $request->apply_id,
             ]),
             "order_meta" => [
-                "return_url" => "https://admin.investifya.com/payment/callback?order_id=$orderId"
+                "return_url" => "https://gk1-9zox.onrender.com/api/payment/success?order_id=$orderId"
             ],
         ];
     
@@ -132,7 +132,7 @@ class CashfreeController1 extends Controller
                 $emi->update($data);
             } else {
                 // Resolve chit_group_id and chit_id from applied_chits
-                // to avoid MySQL error 1364 (Field 'chit_group_id' doesn't have a default value)
+                // to avoid MySQL error 1364
                 $applied = DB::table('applied_chits as ac')
                     ->join('chitdetails as cd', 'ac.chit_id', '=', 'cd.id')
                     ->leftJoin('chit_groups as cg', 'cd.chit_id', '=', 'cg.chit_id')
@@ -197,9 +197,9 @@ class CashfreeController1 extends Controller
             ], 400);
         }
 
-        $appId     = "1066662783142e7bd032d0926c32666601";
+        $appId     = env("CASHFREE_APP_ID");
         $secretKey = env("CASHFREE_SECRET_KEY");
-        $url       = "https://api.cashfree.com/pg/orders/$orderId";
+        $url       = "https://sandbox.cashfree.com/pg/orders/$orderId";
 
         $response = Http::withHeaders([
             "x-client-id"     => $appId,
@@ -218,7 +218,6 @@ class CashfreeController1 extends Controller
 
         $orderData = $response->json();
 
-        // ✅ Decode order_note
         $rawNote = html_entity_decode($orderData['order_note'] ?? '{}', ENT_QUOTES);
         $note    = json_decode($rawNote, true);
 
@@ -248,12 +247,9 @@ class CashfreeController1 extends Controller
             ], 400);
         }
 
-        // =====================================================
-        // ✅ Payment Mode nikaalne ke liye Payments API call
-        // =====================================================
         $paymentMode = null;
 
-        $paymentsUrl = "https://api.cashfree.com/pg/orders/{$orderId}/payments";
+        $paymentsUrl = "https://sandbox.cashfree.com/pg/orders/{$orderId}/payments";
         $paymentsRes = Http::withHeaders([
             "x-client-id"     => $appId,
             "x-client-secret" => $secretKey,
@@ -262,7 +258,6 @@ class CashfreeController1 extends Controller
 
         if ($paymentsRes->successful()) {
             $payments = $paymentsRes->json();
-            // Cashfree usually returns array of payments
             if (is_array($payments) && count($payments) > 0) {
                 $latestPayment = $payments[0];
                 $paymentMode = $latestPayment['payment_group'] 
@@ -274,9 +269,6 @@ class CashfreeController1 extends Controller
 
         \Log::info("💳 Payment Mode Detected", ['payment_mode' => $paymentMode, 'order_id' => $orderId]);
 
-        // =====================================================
-        // ✅ Update or Insert EMI record
-        // =====================================================
         $emi = Bid::where([
                 'user_id'         => $userId,
                 'applied_chit_id' => $applyId,
